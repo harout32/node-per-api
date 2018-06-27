@@ -31,6 +31,11 @@ const userSchema = mongoose.Schema({
   },
   token:{
     type:String
+  },
+  role: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Role',
+    required: 'Role is Required'
   }
 });
 
