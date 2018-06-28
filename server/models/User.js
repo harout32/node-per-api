@@ -43,8 +43,7 @@ const userSchema = mongoose.Schema({
 // in order to not in mistake return the sensetive data 
 userSchema.methods.toJSON = function(){
   let userObject = this.toObject();
-  console.log(userObject);
-  return pick(userObject, ['_id','username', 'email', 'token']);
+  return pick(userObject, ['_id','username', 'email', 'token', 'role']);
 }
 
 //hashing the password before saving it 

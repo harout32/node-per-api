@@ -1,6 +1,7 @@
 const { Course }      = require('../models/Course');
 const { User }        = require('../models/User');
 const { Role }        = require('../models/Role');
+const { Permission }  = require('../models/Permission');
 const { catchErrors } = require('../error handlers/errorHandler');
 const pick            = require('lodash/pick');
 const bycrept         = require('bcrypt');
@@ -18,6 +19,10 @@ const bycrept         = require('bcrypt');
 
 exports.createUser = async (req, res) => {
   const data = pick(req.body, ['username','password','email', 'role']);
+  const role = await Role.findOne({name: data.role});
+  data.role = role._id;
+  console.log(data);
+  
   const user = await(new User(data)).save();
   const token = await user.generateToken();
   res.send(user);
@@ -25,7 +30,12 @@ exports.createUser = async (req, res) => {
 
 exports.login = async (req, res, next) => {
   const data = pick(req.body, ['username', 'password']);
-  const user = await User.findOne({username:data.username});
+  const user = await User.findOne({username:data.username}).populate(
+    {
+      path: 'role',
+      populate:{path: 'permissions', model: 'Permission'}
+    }
+  );
   if(!user) return next({message:'You\'r Credentials are not Correct!!', status:401});
   //compare hashed password with the plane text one
   const validPass = await bycrept.compare(data.password, user.password);
@@ -44,17 +54,23 @@ exports.logout = async ( req, res, next) => {
 }
 
 exports.addRole = async (req, res, next) => {
-  const data = pick(req.body, ['name']);
-  const role = await (new Role(data)).save();
+  const data = pick( req.body, ['name'] );
+  data.permissions = [];
+  console.log(data);
+  
+  const role = await ( new Role(data) ).save();
   if(!role)return next({message: 'something went wrong', status :500});
   res.status(200).send(role);
 }
 
 exports.addPermission = async (req, res ,next) => {
   const data = pick(req.body, ['permission', 'role']);
-  const role =await Role.findOneAndUpdate( {name :data.role},{$push: { permissions:data.permission }}, { 'new': true} );
+  const permission = await Permission.findOne({name: data.permission});
+  if(!permission) return next({message: 'permission is not valid', status: 500});
+  console.log(permission._id);
+  const role =await Role.findOneAndUpdate( {name :data.role},{ $addToSet: { permissions:permission._id } }, { new: true, runValidators: true} ).populate('permissions');
   if(!role)return next({message: 'couldn\'t find the role',status :500});
-  res.send(role);
+  res.status(200).send(role);
   // await role.save();
   // res.status(200).send(role);
 }

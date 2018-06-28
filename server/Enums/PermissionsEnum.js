@@ -2,7 +2,7 @@ module.exports.permissionsEnum = [
     'viweUsers', 
     'editUsers',
     'createUsers',
-    'deletUser',
+    'deleteUser',
     'viewDashboard',
     'viewPermissions',
     'addPermissions',
