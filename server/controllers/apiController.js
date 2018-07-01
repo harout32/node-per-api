@@ -7,6 +7,7 @@ const pick            = require('lodash/pick');
 const bycrept         = require('bcrypt');
 
 
+
 // exports.createCourse =  async(req, res) => {
 //   const course = new Course({
 //     description: 'learn node from scratch',
@@ -29,11 +30,12 @@ exports.createUser = async (req, res) => {
 };
 
 exports.login = async (req, res, next) => {
+  
   const data = pick(req.body, ['username', 'password']);
   const user = await User.findOne({username:data.username}).populate(
     {
       path: 'role',
-      populate:{path: 'permissions', model: 'Permission'}
+      select: '-_id -permissions -__v'
     }
   );
   if(!user) return next({message:'You\'r Credentials are not Correct!!', status:401});
@@ -65,12 +67,36 @@ exports.addRole = async (req, res, next) => {
 
 exports.addPermission = async (req, res ,next) => {
   const data = pick(req.body, ['permission', 'role']);
+
   const permission = await Permission.findOne({name: data.permission});
   if(!permission) return next({message: 'permission is not valid', status: 500});
-  console.log(permission._id);
-  const role =await Role.findOneAndUpdate( {name :data.role},{ $addToSet: { permissions:permission._id } }, { new: true, runValidators: true} ).populate('permissions');
+
+  const role =await Role.findOneAndUpdate(
+    {name :data.role},
+    { $addToSet: { permissions:permission._id } },
+    { new: true, runValidators: true} 
+  ).populate('permissions');
+
   if(!role)return next({message: 'couldn\'t find the role',status :500});
+
   res.status(200).send(role);
-  // await role.save();
-  // res.status(200).send(role);
+}
+
+exports.getUserPermissions = async (req, res, next) => {
+  console.log(req.user);
+  
+ const role = await Role.findById(req.user.role._id).populate(
+    {
+      path: 'permissions',
+      select: '-_id'
+    }
+  );
+  if(!role) return next({message :'no such a Role !!!', status :400 });
+  const permissions =  role.permissions.map(per => per.name);
+  res.status(200).send(permissions);
+}
+
+
+exports.addPlayer = async (req, res ,next) => {
+
 }

@@ -1,11 +1,7 @@
 module.exports.permissionsEnum = [
-    'viweUsers', 
-    'editUsers',
-    'createUsers',
-    'deleteUser',
-    'viewDashboard',
-    'viewPermissions',
-    'addPermissions',
-    'viewComments',
-    'addComments'
+    'viewPlayers', 
+    'editPlayers',
+    'addPlayers',
+    'deletePlayers',
+    'viewDashboard'
 ];
