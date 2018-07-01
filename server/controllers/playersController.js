@@ -19,14 +19,13 @@ exports.editPlayer = async (req, res, next) => {
 };
 
 exports.getPlayers = async (req, res , next) => {
-    const players = await Player.find();
+    const players = await Player.find().populate('creator', 'username');
     if(!players) return next({message: "no Players to show", status:400});
     res.status(200).send(players);
 }
 
 exports.deletePlayer = async (req, res, next) => {
     const player = await Player.findByIdAndRemove(req.body._id);
-    console.log(player);
     if(!player) return next({message: "no Players to delete", status:400});
     res.status(200).send(player);
 }
