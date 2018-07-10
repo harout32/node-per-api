@@ -1,10 +1,10 @@
 
 const mongoose = require('mongoose');
-const { permissionsEnum } = require('../Enums/PermissionsEnum'); 
+const { permissionsArray } = require('../Enums/PermissionsEnum'); 
 const permission = mongoose.Schema({
     name:{
         type: String,
-        enum: permissionsEnum,
+        enum: permissionsArray,
         unique: true,
         maxLength: [15, 'length should be less that 15 charachters'],
         match: [ /[A-Za-z]/, 'Role should be only letters' ]

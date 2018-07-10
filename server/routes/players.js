@@ -6,6 +6,7 @@ const {catchErrors, notFound, apiHandle} = require('../error handlers/errorHandl
 const { authentication } = require('../middlewares/authentication');
 const { permissions }  = require('../middlewares/permissions');
 
+const { permissionsEnum } = require('../Enums/PermissionsEnum');
 const {
     addPlayer,
     getPlayers,
@@ -13,11 +14,11 @@ const {
     deletePlayer
 } = require('../controllers/playersController');
 
-
-players.post('/', authentication, permissions(['addPlayers']), catchErrors(addPlayer));
-players.get('/', authentication, permissions(['viewPlayers']), catchErrors(getPlayers));
-players.post('/edit', authentication, permissions(['editPlayers']), catchErrors(editPlayer));
-players.post('/delete', authentication, permissions(['editPlayers']), catchErrors(deletePlayer));
+players.use(authentication);
+players.post('/', permissions([permissionsEnum.addPlayers]), catchErrors(addPlayer));
+players.get('/', permissions([permissionsEnum.viewPlayers]), catchErrors(getPlayers));
+players.post('/edit', permissions([permissionsEnum.editPlayers]), catchErrors(editPlayer));
+players.post('/delete', permissions([permissionsEnum.editPlayers]), catchErrors(deletePlayer));
 
 players.use(notFound);
 players.use(apiHandle);
