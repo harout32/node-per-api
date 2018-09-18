@@ -17,11 +17,11 @@ const {
 } = require('../controllers/apiController');
 
 api.post('/islogedin', catchErrors(isLogedIn));
-api.post('/register' , catchErrors(createUser));
+// api.post('/register' , catchErrors(createUser));
 api.post('/login'    , catchErrors(login));
 api.get('/logout'    , catchErrors(logout));
 
-api.post('/role', catchErrors(addRole));
+// api.post('/role', catchErrors(addRole));
 // api.post('/permission', catchErrors(addPermission));
 api.get('/getPermissions',authentication, catchErrors(getUserPermissions));
 api.use('/players', players );
