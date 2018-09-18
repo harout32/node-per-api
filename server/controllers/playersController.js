@@ -7,6 +7,7 @@ exports.addPlayer = async (req, res, next ) => {
     data.creator = req.user._id;
 
     const player = await (new Player(data).save());
+    if(!player) return next({message: 'something went wrong', status: 400});
     return res.status(200).send(player);
 
 }
@@ -19,7 +20,7 @@ exports.editPlayer = async (req, res, next) => {
 };
 
 exports.getPlayers = async (req, res , next) => {
-    const players = await Player.find().populate('creator', 'username');
+    const players = await Player.find().select('-__v -createdAt -updatedAt').populate('creator', 'username -_id');
     if(!players) return next({message: "no Players to show", status:400});
     res.status(200).send(players);
 }

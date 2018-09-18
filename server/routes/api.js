@@ -22,7 +22,7 @@ api.post('/login'    , catchErrors(login));
 api.get('/logout'    , catchErrors(logout));
 
 api.post('/role', catchErrors(addRole));
-api.post('/permission', catchErrors(addPermission));
+// api.post('/permission', catchErrors(addPermission));
 api.get('/getPermissions',authentication, catchErrors(getUserPermissions));
 api.use('/players', players );
 

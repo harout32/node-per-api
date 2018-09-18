@@ -59,9 +59,15 @@ exports.addRole = async (req, res, next) => {
   const data = pick( req.body, ['name'] );
   data.permissions = [];
   console.log(data);
-  
-  const role = await ( new Role(data) ).save();
-  if(!role)return next({message: 'something went wrong', status :500});
+  let role;
+  try { 
+
+    role = await ( new Role(data) ).save();
+  } catch (e) {
+    return next({message: 'Role is already exist', status :400});
+  }
+  if(!role)return next({message: 'Role is already exist', status :400});
+
   res.status(200).send(role);
 }
 
@@ -69,7 +75,7 @@ exports.addPermission = async (req, res ,next) => {
   const data = pick(req.body, ['permission', 'role']);
 
   const permission = await Permission.findOne({name: data.permission});
-  if(!permission) return next({message: 'permission is not valid', status: 500});
+  if(!permission) return next({message: 'permission is not valid', status: 400});
 
   const role =await Role.findOneAndUpdate(
     {name :data.role},
@@ -77,7 +83,7 @@ exports.addPermission = async (req, res ,next) => {
     { new: true, runValidators: true} 
   ).populate('permissions');
 
-  if(!role)return next({message: 'couldn\'t find the role',status :500});
+  if(!role)return next({message: 'couldn\'t find the role',status :400});
 
   res.status(200).send(role);
 }
@@ -96,7 +102,3 @@ exports.getUserPermissions = async (req, res, next) => {
   res.status(200).send(permissions);
 }
 
-
-exports.addPlayer = async (req, res ,next) => {
-
-}

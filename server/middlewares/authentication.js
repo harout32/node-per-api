@@ -3,7 +3,7 @@ let {User} = require('../models/User');
 
 exports.authentication = async (req, res, next) => {
     try{    
-    let token = req.header('token');
+    let token = req.header('Authorization');
     const user = await User.findByToken(token);
     if(!user) return res.status(401).send({mesage: 'not allowed', status: 401});
 
