@@ -1,8 +1,7 @@
 const { Course }      = require('../models/Course');
 const { User }        = require('../models/User');
 const { Role }        = require('../models/Role');
-const { Permission }  = require('../models/Permission');
-const { catchErrors } = require('../error handlers/errorHandler');
+
 const pick            = require('lodash/pick');
 const bycrept         = require('bcrypt');
 

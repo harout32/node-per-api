@@ -6,6 +6,7 @@ const {catchErrors, notFound, apiHandle} = require('../error handlers/errorHandl
 const { authentication } = require('../middlewares/authentication');
 const { permissions }  = require('../middlewares/permissions');
 
+const { permissionsEnum } = require('../Enums/PermissionsEnum');
 const {
     addPlayer,
     getPlayers,
