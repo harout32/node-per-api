@@ -19,9 +19,9 @@ const {
 const {permissionsEnum} = require('../Enums/PermissionsEnum');
 
 roleRouter.use(authentication);
-roleRouter.get('/', catchErrors(getRoles));
-roleRouter.post('/', catchErrors(addRole));
-roleRouter.post('/addPermissionToRole', catchErrors(addPermission));
+// roleRouter.get('/', catchErrors(getRoles));
+// roleRouter.post('/', catchErrors(addRole));
+// roleRouter.post('/addPermissionToRole', catchErrors(addPermission));
 roleRouter.get('/getUserPermissions', catchErrors(getUserPermissions));
 
 roleRouter.use(notFound);
